@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 
 #include "mlx.h"
-#include <stdio.h>
-#include "libft.h"
-#include "stdlib.h"
+#include <stdio.h> //
+#include "fdf.h"
+#include "stdlib.h" // mallloc
 
 typedef struct s_param 
 {
