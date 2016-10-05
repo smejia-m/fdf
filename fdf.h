@@ -17,6 +17,8 @@ typedef struct	s_param
 	int			index_y;
 	int 		index_x;
 	int 		count_lines;
+	int			tmp_len;
+	int			len;
 }				t_param;
 
 
