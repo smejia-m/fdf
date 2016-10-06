@@ -5,7 +5,7 @@
 **fonction de parsing qui verifie si les caracteres de la map sont bons
 */
 
-int ft_cheknum(char *map)
+static int ft_cheknum(char *map)
 {
 	int i;
 
@@ -14,12 +14,8 @@ int ft_cheknum(char *map)
 	{
 		if (map[i] < '0' || map[i] > '9')
 		{
-			//ft_putchar('b');//
 			if (map[i] == ' ' || map[i] == '-' || map[i] == '\n')
-			{
 				i++;
-			//ft_putchar('a');//
-			}
 			else
 			{
 				ft_putstr("error");//
@@ -27,10 +23,7 @@ int ft_cheknum(char *map)
 			}
 		}
 		else
-		{
-		//ft_putchar('c');//
-		i++;
-		}
+			i++;
 	}
 	return (0);
 }
@@ -39,10 +32,8 @@ int ft_cheknum(char *map)
 ** fonction qui verifie que la longueur de lignes soit la même
 */
 
-int ft_checkline(t_param *params)
+static int ft_checkline(t_param *params)
 {
-	printf("tmp len : %d\n", params->tmp_len);
-	printf("len : %d\n", params->len);
 	if(params->tmp_len != 0)
 	{
 		if (params->tmp_len != params->len)
@@ -78,16 +69,7 @@ static	int		count(char const *s, char c)
 **fonction qui initisialise la structure
 */
 
-t_point *ft_point_ini(void)
-{
-	t_point *point;
-	
-	if (!(point = (t_point *)malloc(sizeof(t_point))))
-		return (NULL);
-	return (point);
-}
-
-t_param *ft_param_ini(void)
+static t_param *ft_param_ini(void)
 {
 	t_param *params;
 
@@ -99,6 +81,7 @@ t_param *ft_param_ini(void)
 	params->count_lines = 0;
 	params->tmp_len = 0;
 	params->len = 0;
+	params->ret = 0;
 	return (params);
 }
 
@@ -106,90 +89,79 @@ t_param *ft_param_ini(void)
 **fonction qui place dans une structure les coordones 
 */
 
-t_point *ft_toplace(char **tab, int y)
+static t_list *ft_toplace(char **tab, int y, t_list *lst)
 {
 	int i;
 	t_point *point;
+	t_list *new_lst;
+	int toplace; //
 
 	i = 0;
 	if(!(point = (t_point *)malloc(sizeof(t_point))))
 		return (NULL);
+	new_lst = NULL;
+	toplace = 0;//
 	while(tab[i])
 	{
 		point->l = ft_atoi(&tab[i][0]);
+		ft_putnbr(point->l);//
 		point->x = i + 1;
 		point->y = y;
 		i++;
+		new_lst = ft_lstnew(point, sizeof(point));
+		ft_lstadd(&lst, new_lst);
+		toplace++;
 	}
-	return (point);
+	//free(coor); a voir si ça fait fait pas planter le programme
+	//free(new_lst); bis
+	return (lst);
 }
 
 /*
 ** fonction qui lit la map separe les lignes et les mets dans une structure
 */
 
-int ft_reader(int fd, char *line)
+t_list *ft_reader(int fd, char *line)
 {
-	int ret;
 	t_list *lst;
-	t_list *new_lst;
-	t_point *coor;
+	t_point *coor;//
 	t_param *params;
-
-	ret = 0;
+	int test; //
 	if(!(params = ft_param_ini()))
-		return (-1);
-	coor = NULL;
+		return (NULL);
+	coor = NULL;//
 	lst = NULL;
-	new_lst = NULL;
-	while ((ret = get_next_line(fd, &line) > 0))
+	test= 0;//
+	while ((params->ret = get_next_line(fd, &line) > 0))
 	{
 		params->index_y++;
 		if(ft_cheknum(line) == -1 || ft_checkline(params) == -1) 
-			return (-1);
-		printf("ret : %d line : %s\n ",ret , line); //
+			return (NULL);
+		//printf("ret : %d line : %s\n ",params->ret , line); //
 		params->tab = ft_strsplit(line, ' ');
 		params->tmp_len = params->len;
 		params->len = count(line, ' ');
-		coor = ft_toplace(params->tab, params->index_y);
-		new_lst = ft_lstnew(coor, sizeof(coor));
-		ft_lstadd(&lst, new_lst);
+		lst = ft_toplace(params->tab, params->index_y, lst);
         free(line);
+        test++;
     }
+    ft_lstrev(&lst);
+    //test debut
+    while(lst != NULL)
+    {
+    	coor = lst->content;
+    	printf("x : %d y : %d l : %c\n", coor->x, coor->y, coor->l);
+    	lst = lst->next;
+
+    }
+    while(lst != NULL)
+    {
+    	coor = lst->content;
+    	printf("x : %d y : %d l : %c\n", coor->x, coor->y, coor->l);
+    	lst = lst->next;
+
+    }
+    //testfin*/
     free(coor);
-    return(0);
-}
-
-/*
-**fonction reader qui lit le ficher ouvert dans le main et qui le place dans une structure
-*/
-
-
-
-/*
-**la fonction main reçoit un ficher map qui doit etre ouvert
-*/
-
-int main (int ac, char **av)
-{
-	int fd;
-	int ret;
-	char *line;
-
-	fd = 0;
-	ret = 0;
-	line = NULL;
-	if (ac == 2)
-	{
-		//ft_putstr("test");//
-		fd = open(av[1], O_RDONLY);
-		ret = ft_reader(fd, line);
-		ft_putstr("wiki wiki");//
-	}
-	else
-	{ 
-		return (0);
-		ft_putstr("error\n");
-	}
-	return(ret);
+    return (lst);
 }

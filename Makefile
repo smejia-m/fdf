@@ -12,19 +12,20 @@
 
 NAME = fdf
 
-SRC = fdf.c 
+SRC = main.c fdf.c ficher_struct_fdf.c
 
 OBJ		= $(SRC:.c=.o)
 
 INC_DIR	= ./inc/
-
-SRC		= ficher_struct_fdf.c
 
 CC		= clang
 CFLAGS	= -Wall -Wextra -Werror -g
 
 LIBLINK	= -L ./libft -lft 
 
+MLXLIBS = -L/usr/local/lib/ -I/usr/local/include -lmlx 
+
+FRAMEWORKS = -framework OpenGL -framework AppKit
 
 all: $(NAME)
 
@@ -32,10 +33,11 @@ lib_make:
 	make -C ./libft
 
 $(NAME): lib_make $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBLINK)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBLINK) $(MLXLIBS) $(FRAMEWORKS) 
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I $(INC_DIR) -o $@ -c $<
+	$(CC) $(CFLAGS) -I $(INC_DIR) -o $@ -c $< 
+	
 
 .PHONY: clean fclean
 
