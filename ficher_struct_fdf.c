@@ -1,5 +1,4 @@
 #include "fdf.h"
-#include <stdio.h> //
 
 /*
 **fonction de parsing qui verifie si les caracteres de la map sont bons
@@ -66,7 +65,7 @@ static	int		count(char const *s, char c)
 }
 
 /*
-**fonction qui initisialise la structure
+**fonction qui initisialise la structure param
 */
 
 static t_param *ft_param_ini(void)
@@ -77,7 +76,6 @@ static t_param *ft_param_ini(void)
 		return (NULL);
 	params->tab = NULL;
 	params->index_y = 0;
-	params->index_x = 0;
 	params->count_lines = 0;
 	params->tmp_len = 0;
 	params->len = 0;
@@ -86,7 +84,7 @@ static t_param *ft_param_ini(void)
 }
 
 /*
-**fonction qui place dans une structure les coordones 
+**fonction qui place les coordonnes de chaque point dans une struct t_point 
 */
 
 static t_list *ft_toplace(char **tab, int y, t_list *lst)
@@ -94,26 +92,21 @@ static t_list *ft_toplace(char **tab, int y, t_list *lst)
 	int i;
 	t_point *point;
 	t_list *new_lst;
-	int toplace; //
 
 	i = 0;
 	if(!(point = (t_point *)malloc(sizeof(t_point))))
 		return (NULL);
 	new_lst = NULL;
-	toplace = 0;//
 	while(tab[i])
 	{
 		point->l = ft_atoi(&tab[i][0]);
-		ft_putnbr(point->l);//
 		point->x = i + 1;
 		point->y = y;
 		i++;
 		new_lst = ft_lstnew(point, sizeof(point));
 		ft_lstadd(&lst, new_lst);
-		toplace++;
 	}
-	//free(coor); a voir si ça fait fait pas planter le programme
-	//free(new_lst); bis
+	free(point);
 	return (lst);
 }
 
@@ -124,44 +117,21 @@ static t_list *ft_toplace(char **tab, int y, t_list *lst)
 t_list *ft_reader(int fd, char *line)
 {
 	t_list *lst;
-	t_point *coor;//
 	t_param *params;
-	int test; //
 	if(!(params = ft_param_ini()))
 		return (NULL);
-	coor = NULL;//
 	lst = NULL;
-	test= 0;//
 	while ((params->ret = get_next_line(fd, &line) > 0))
 	{
 		params->index_y++;
 		if(ft_cheknum(line) == -1 || ft_checkline(params) == -1) 
 			return (NULL);
-		//printf("ret : %d line : %s\n ",params->ret , line); //
 		params->tab = ft_strsplit(line, ' ');
 		params->tmp_len = params->len;
 		params->len = count(line, ' ');
 		lst = ft_toplace(params->tab, params->index_y, lst);
         free(line);
-        test++;
     }
     ft_lstrev(&lst);
-    //test debut
-    while(lst != NULL)
-    {
-    	coor = lst->content;
-    	printf("x : %d y : %d l : %c\n", coor->x, coor->y, coor->l);
-    	lst = lst->next;
-
-    }
-    while(lst != NULL)
-    {
-    	coor = lst->content;
-    	printf("x : %d y : %d l : %c\n", coor->x, coor->y, coor->l);
-    	lst = lst->next;
-
-    }
-    //testfin*/
-    free(coor);
     return (lst);
 }

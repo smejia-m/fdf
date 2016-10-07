@@ -27,7 +27,7 @@ int main(int ac, char **av)
 	{
 		fd = open(av[1], O_RDONLY);
 		list = ft_reader(fd, line);
-		ret = ft_graph(list);
+		ret = ft_graph(list, av[1]);
 	}
 	else
 	{ 
