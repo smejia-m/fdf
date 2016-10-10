@@ -5,6 +5,9 @@
 # include <fcntl.h>
 #include <stdio.h> //
 
+typedef unsigned char t_byte;
+typedef unsigned int t_pixel;
+
 typedef struct	s_point
 {
 	int x;
@@ -26,8 +29,15 @@ typedef struct s_wparam
 {
 	void		*win;
 	void 		*mlx;
-	void		*img;
 }				t_wparam;
+
+typedef struct s_image
+{
+	void *img;
+	t_pixel *data;
+	int height;
+	int width;
+}				t_image;
 
 t_list			*ft_reader(int fd, char *line);
 int 			ft_graph(t_list *list, char *str);
