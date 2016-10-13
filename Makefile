@@ -12,7 +12,7 @@
 
 NAME = fdf
 
-SRC = main.c fdf.c ficher_struct_fdf.c
+SRC = main.c fdf.c ft_parsing.c
 
 OBJ		= $(SRC:.c=.o)
 

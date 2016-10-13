@@ -12,26 +12,32 @@
 
 #include "fdf.h"
 
+
+
 int main(int ac, char **av)
 {
 	int fd;
 	int ret;
 	char *line;
-	t_list *list;
+	t_param *parametres;
 
 	fd = 0;
 	ret = 0;
 	line = NULL;
-	list = NULL;
+	parametres  = NULL;
 	if (ac == 2)
 	{
 		fd = open(av[1], O_RDONLY);
-		list = ft_reader(fd, line);
-		ret = ft_graph(list, av[1]);
+		parametres = ft_reader(fd, line);
+		ret = ft_graph(parametres, av[1]);
 	}
 	else
 	{ 
 		return (0);
+		ft_putstr("error\n");
+	}
+	if(ret == -1)
+	{
 		ft_putstr("error\n");
 	}
 	return(ret);
