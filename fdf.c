@@ -45,12 +45,16 @@ int my_key_func(int keycode, t_wparam *param)
 void my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 {
 	int i;
+	int imax; //test pour mars
 
 	//printf("image->width: %d, image->height :%d\n ", image->width, image->height);//
 	i = ((y * image->width) + x);
+	imax = (image->height * image->width);//test mars
+
 	//printf(" i : %d\n", i);//
 	printf("x: %d y : %d\n",x ,y);//
-	image->data[i] = pixel;
+	if(i < imax) // test mars
+		image->data[i] = pixel; 
 }
 
 /*
@@ -188,12 +192,12 @@ int ft_graph(t_param *parametres, char *win_name)
 		{
 		point = parametres->list->content;
 		printf("point->x : %d,point->y : %d  point->z : %d\n", point->x, point->y, point->z);//	
-		my_pixel_put(image, (point->x - point->y) * 20 + image->width / 2, (point->x + point->y) * 10 + image->height / 2, 0x00FF0000);
+		my_pixel_put(image, (point->x - point->y) * image->wtile + image->width / 2, (point->x + point->y) * image->htile + image->height / 2, 0x00FF0000);
 			
 		if(point->z != 0)
 		{
 			ft_putstr("coordones z : ");
-			my_pixel_put(image, (point->x - point->y) * 20 + image->width / 2, ((point->x + point->y) - point->z) * 10 + image->height / 2, 0x00FFFFFF);
+			my_pixel_put(image, (point->x - point->y) * image->wtile + image->width / 2, ((point->x + point->y) - point->z) * image->htile + image->height / 2, 0x00FFFFFF);
 		}
 		parametres->list = parametres->list->next;
 		}
