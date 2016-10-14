@@ -46,9 +46,9 @@ void my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 {
 	int i;
 
-	printf("image->width: %d, image->height :%d\n ", image->width, image->height);//
+	//printf("image->width: %d, image->height :%d\n ", image->width, image->height);//
 	i = ((y * image->width) + x);
-	printf(" i : %d\n", i);//
+	//printf(" i : %d\n", i);//
 	printf("x: %d y : %d\n",x ,y);//
 	image->data[i] = pixel;
 }
@@ -83,6 +83,8 @@ t_image *init_struct_img(t_wparam *wparam, int width, int height)
 	image->data = (t_pixel *)mlx_get_data_addr(image->img, &bits_per_pixel, &size_line, &endian);
 	image->height = height;
 	image->width = width;
+	image->htile = 10;
+	image->wtile = 20;
 	//printf("bits_per_pixel : %d, size_line : %d\n", bits_per_pixel, size_line);//
 	/*if (bits_per_pixel != 32 || size_line != width * 4)
 	{
@@ -91,8 +93,11 @@ t_image *init_struct_img(t_wparam *wparam, int width, int height)
 	return (image);
 }
 
-
-void ft_tracer(int xi, int yi, int xf, int yf, t_image *image)
+/*
+**fonction qui trace des droites
+*/
+/*
+void ft_tracer(t_point *pointi, t_point *pointf, t_image *image)
 {
 	int dx;
 	int dy;
@@ -100,28 +105,48 @@ void ft_tracer(int xi, int yi, int xf, int yf, t_image *image)
 	int y;
 	int index;
 
-	dx = xf - xi;
-	dy = yf - xi;
-	x = xi;
-	y = yi;
-	my_pixel_put(image, x, y, 0x00FFFFFF);
+	dx = pointf->x - pointi->x;
+	dy = pointf->y - pointi->x;
+	x = pointi->x;
+	y = pointf->y;
+	my_pixel_put(image, (x - y) * 20 * image->width / 2 , (x + y) * 10 + image->height / 2 , 0x00FFFFFF);
 	index = dx / 2;
-	if(xf > xi && yf >= yi && (xf - xi) > (yf - yi))
+	if(pointf->x > pointi->x && pointf->y >= pointi->y && (pointf->x - pointi->x) > (pointf->y - pointi->y))
 	{
-		while (x < xf)
+		while (x < pointf->x)
 		{
-			//ft_putchar('q');//
+			ft_putchar('q');//
 			index = index + dy;
 			if( index >= dx)
 			{
 				index = index - dx;
 				y = y + 1;
 			}
-			my_pixel_put(image, x, y, 0x00FFFFFF);
+			my_pixel_put(image, (x - y) * 20 * image->width / 2 , (x + y) * 10 + image->height / 2 , 0x00FFFFFF);
 			++x;
 		}
 	}
 }
+*/
+
+/*
+**transforme les coordonnes en iso
+*/
+
+/*t_point *ft_cooriso(t_point *point, t_image *image);
+{
+ int x;
+ int y;
+ int z;
+
+x = (point->x - point->y * 
+
+
+
+}
+*/
+
+
 
 /*
 **fonction principal qui construit le graph
@@ -133,10 +158,10 @@ int ft_graph(t_param *parametres, char *win_name)
 	t_wparam *wparam;
 	t_image *image;
 	t_point *point;
-	//t_point *nxt_point;
+	t_point *nxt_point;
 
 	point = NULL;
-	//nxt_point = NULL;
+	nxt_point = NULL;
 	wparam = (t_wparam *)malloc(sizeof (t_wparam));
 	wparam->mlx = mlx_init();
 	wparam->win = mlx_new_window(wparam->mlx, 900, 600, win_name);
@@ -151,17 +176,25 @@ int ft_graph(t_param *parametres, char *win_name)
 		//ft_putchar('b');//
 		nxt_point = parametres->list->content;
 		//ft_putchar('c');//
-		ft_tracer(point->x, point->y, nxt_point->x, nxt_point->y, image);
+		ft_tracer(point, nxt_point, image);
 		//ft_putchar('d');//
 		point = nxt_point;
 		//ft_putchar('e');//
 		//ft_putchar('\n');//
 	}
 	*///fin test
+	
 	while (parametres->list)
 		{
-		point = parametres->list->content;	
-		my_pixel_put(image, (point->x - point->y) * 10 +  image->width / 2, ((point->x) + (point->y)) * 10 + image->height / 2, 0x00FF0000); //effacer le + 10
+		point = parametres->list->content;
+		printf("point->x : %d,point->y : %d  point->z : %d\n", point->x, point->y, point->z);//	
+		my_pixel_put(image, (point->x - point->y) * 20 + image->width / 2, (point->x + point->y) * 10 + image->height / 2, 0x00FF0000);
+			
+		if(point->z != 0)
+		{
+			ft_putstr("coordones z : ");
+			my_pixel_put(image, (point->x - point->y) * 20 + image->width / 2, ((point->x + point->y) - point->z) * 10 + image->height / 2, 0x00FFFFFF);
+		}
 		parametres->list = parametres->list->next;
 		}
 	mlx_put_image_to_window(wparam->mlx, wparam->win, image->img, 0, 0);

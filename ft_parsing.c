@@ -100,21 +100,21 @@ static t_param *ft_param_ini(void)
 
 static t_list *ft_toplace(t_param *param, t_list *lst)
 {
-	t_point *point;
+	t_point *points;
 	t_list *new_lst;
-
+	
 	param->index_x = 0;
-	if(!(point = (t_point *)malloc(sizeof(t_point))))
+	if(!(points = (t_point *)malloc(sizeof(t_point))))
 		return (NULL);
 	new_lst = NULL;
 	while(param->tab[param->index_x])
 	{
-		point->l = ft_atoi(&param->tab[param->index_x][0]);
-		point->x = param->index_x;
-		point->y = param->index_y;
+		points->z = ft_atoi(param->tab[param->index_x]);
+		points->x = param->index_x;
+		points->y = param->index_y;
 		param->index_x++;
-		new_lst = ft_lstnew(point, sizeof(point));
-		ft_lstadd(&lst, new_lst);
+		new_lst = ft_lstnew(points, sizeof(t_point));
+		ft_lstadd(&lst, new_lst); 	
 	}
 	return (lst);
 }
@@ -137,6 +137,8 @@ static int **conlistab(t_list *list, int size_x, int size_y)
 		tab = (int **)malloc(sizeof(int) * size_x);
 		while (count > 0)
 		{
+			point = list->content;
+			
 			
 
 
@@ -173,7 +175,7 @@ t_param *ft_reader(int fd, char *line)
 		parametres->index_y++;
     }
     ft_lstrev(&lst);
-    printf("index y: %d index_x : %d\n",parametres->index_y ,parametres->index_x);
+  //  printf("index y: %d index_x : %d\n",parametres->index_y ,parametres->index_x);
    // tab = conlistab(list, parametres->index_y);
     parametres->list = lst;
     return (parametres);

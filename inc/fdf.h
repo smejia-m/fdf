@@ -3,6 +3,7 @@
 # include "libft.h"
 # include "mlx.h"
 # include <fcntl.h>
+# include <math.h>
 #include <stdio.h> //
 
 typedef unsigned char t_byte;
@@ -12,7 +13,7 @@ typedef struct	s_point
 {
 	int x;
 	int y;
-	int l;
+	int z;
 }				t_point;
 
 // struct ficher_struct_fdf
@@ -34,6 +35,8 @@ typedef struct s_image
 	t_pixel *data;
 	int height;
 	int width;
+	int htile;
+	int wtile;
 }				t_image; 
 
 typedef struct s_wparam 
