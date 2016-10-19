@@ -17,7 +17,7 @@ typedef struct	s_point
 }				t_point;
 
 // struct ficher_struct_fdf
-typedef struct	s_param
+typedef struct	s_parse
 {
 	char		**tab;
 	int			index_y;
@@ -26,8 +26,15 @@ typedef struct	s_param
 	int			tmp_len;
 	int			len;
 	int			ret;
-	t_list		*list;
+}				t_parse;
+
+typedef struct s_param
+{
+	int			**tab;
+	int			height;
+	int			width;
 }				t_param;
+
 
 typedef struct s_image
 {
@@ -47,7 +54,7 @@ typedef struct s_wparam
 
 
 
-t_param			*ft_reader(int fd, char *line);
+t_param		*ft_reader(int fd, char *line);
 int 			ft_graph(t_param *parametres, char *str);
 int 			my_key_func(int keycode, t_wparam *param);
 #endif

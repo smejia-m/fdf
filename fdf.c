@@ -44,15 +44,14 @@ int my_key_func(int keycode, t_wparam *param)
 
 void my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 {
-	int i;
-	int imax; //test pour mars
+	unsigned int i;
+	unsigned int imax; //test pour mars
 
 	//printf("image->width: %d, image->height :%d\n ", image->width, image->height);//
 	i = ((y * image->width) + x);
 	imax = (image->height * image->width);//test mars
-
 	//printf(" i : %d\n", i);//
-	printf("x: %d y : %d\n",x ,y);//
+	//printf("x: %d y : %d\n",x ,y);//
 	if(i < imax) // test mars
 		image->data[i] = pixel; 
 }
@@ -87,8 +86,8 @@ t_image *init_struct_img(t_wparam *wparam, int width, int height)
 	image->data = (t_pixel *)mlx_get_data_addr(image->img, &bits_per_pixel, &size_line, &endian);
 	image->height = height;
 	image->width = width;
-	image->htile = 10;
-	image->wtile = 20;
+	image->htile = 1;
+	image->wtile = 2;
 	//printf("bits_per_pixel : %d, size_line : %d\n", bits_per_pixel, size_line);//
 	/*if (bits_per_pixel != 32 || size_line != width * 4)
 	{
@@ -150,6 +149,16 @@ x = (point->x - point->y *
 }
 */
 
+/*
+** cherche la hauteur et la largeur de l'image
+
+t_param
+*/
+
+
+
+
+
 
 
 /*
@@ -157,50 +166,46 @@ x = (point->x - point->y *
 */
 
 
-int ft_graph(t_param *parametres, char *win_name)
+int ft_graph(t_param *params, char *win_name)
 {
 	t_wparam *wparam;
 	t_image *image;
-	t_point *point;
-	t_point *nxt_point;
+	int x;
+	int y;
 
-	point = NULL;
-	nxt_point = NULL;
+	x = 0;
+	y = 0;
 	wparam = (t_wparam *)malloc(sizeof (t_wparam));
+	ft_putchar('a');//
 	wparam->mlx = mlx_init();
-	wparam->win = mlx_new_window(wparam->mlx, 900, 600, win_name);
-	if(!(image = init_struct_img(wparam, 900,600)))
+	ft_putchar('b');//
+	wparam->win = mlx_new_window(wparam->mlx, 800, 600, win_name);
+	ft_putchar('c');//
+	if(!(image = init_struct_img(wparam, 800,600)))
 		return (-1);
-	/*test
-	point = parametres->list->content;
-	while(parametres->list->next)
-	{	
-		//ft_putchar('a');//
-		parametres->list = parametres->list->next;
-		//ft_putchar('b');//
-		nxt_point = parametres->list->content;
-		//ft_putchar('c');//
-		ft_tracer(point, nxt_point, image);
-		//ft_putchar('d');//
-		point = nxt_point;
-		//ft_putchar('e');//
-		//ft_putchar('\n');//
+	ft_putchar('d');//
+	ft_putstr("height : ");//
+	ft_putnbr(params->height);//
+	ft_putstr(" width : ");//
+	ft_putnbr(params->height);//
+	ft_putchar('\n');//
+	while (y < params->height)
+	{
+		ft_putchar('e');//
+		while(x < params->width)
+		{	
+			ft_putchar('f');//
+			my_pixel_put(image, (x - y) * image->wtile + image->width / 2, (x + y) * image->htile + image->height / 2, 0x00FF0000);
+			if(params->tab[y][x] != 0)
+			{
+				ft_putchar('g');//
+				my_pixel_put(image, (x - y) * image->wtile + image->width / 2, ((x + y) - params->tab[y][x]) * image->htile + image->height / 2, 0x00FFFFFF);
+			}
+			++x;
+		}
+		x = 0;
+		++y;
 	}
-	*///fin test
-	
-	while (parametres->list)
-		{
-		point = parametres->list->content;
-		printf("point->x : %d,point->y : %d  point->z : %d\n", point->x, point->y, point->z);//	
-		my_pixel_put(image, (point->x - point->y) * image->wtile + image->width / 2, (point->x + point->y) * image->htile + image->height / 2, 0x00FF0000);
-			
-		if(point->z != 0)
-		{
-			ft_putstr("coordones z : ");
-			my_pixel_put(image, (point->x - point->y) * image->wtile + image->width / 2, ((point->x + point->y) - point->z) * image->htile + image->height / 2, 0x00FFFFFF);
-		}
-		parametres->list = parametres->list->next;
-		}
 	mlx_put_image_to_window(wparam->mlx, wparam->win, image->img, 0, 0);
 	mlx_key_hook(wparam->win, my_key_func,(t_param *)wparam);
 	mlx_mouse_hook(wparam->win, my_mouse_func,(t_param *)wparam);
