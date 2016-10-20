@@ -50,8 +50,6 @@ void my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 	//printf("image->width: %d, image->height :%d\n ", image->width, image->height);//
 	i = ((y * image->width) + x);
 	imax = (image->height * image->width);//test mars
-	//printf(" i : %d\n", i);//
-	//printf("x: %d y : %d\n",x ,y);//
 	if(i < imax) // test mars
 		image->data[i] = pixel; 
 }
@@ -176,26 +174,23 @@ int ft_graph(t_param *params, char *win_name)
 	x = 0;
 	y = 0;
 	wparam = (t_wparam *)malloc(sizeof (t_wparam));
-	ft_putchar('a');//
 	wparam->mlx = mlx_init();
-	ft_putchar('b');//
 	wparam->win = mlx_new_window(wparam->mlx, 800, 600, win_name);
-	ft_putchar('c');//
 	if(!(image = init_struct_img(wparam, 800,600)))
 		return (-1);
-	ft_putchar('d');//
 	ft_putstr("height : ");//
 	ft_putnbr(params->height);//
 	ft_putstr(" width : ");//
-	ft_putnbr(params->height);//
+	ft_putnbr(params->width);//
 	ft_putchar('\n');//
 	while (y < params->height)
 	{
-		ft_putchar('e');//
 		while(x < params->width)
 		{	
-			ft_putchar('f');//
 			my_pixel_put(image, (x - y) * image->wtile + image->width / 2, (x + y) * image->htile + image->height / 2, 0x00FF0000);
+			ft_putstr("params->tab[y][x] : ");//
+			ft_putnbr(params->tab[y][x]);//
+			ft_putchar('\n');//
 			if(params->tab[y][x] != 0)
 			{
 				ft_putchar('g');//
