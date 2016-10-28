@@ -13,29 +13,107 @@
 #include "fdf.h"
 #include <math.h>
 
-/*
-**fonction qui dessine un carre en appuyant sur une touche du clavier
-*/
-
-int my_key_func(int keycode, t_wparam *param)
+void clear_map(t_wparam *wparam)
 {
 	int x;
 	int y;
 
 	x = 0;
 	y = 0;
-	printf("key event %d\n", keycode); //
-	while (x < 300)
+	while(y < wparam->image->height)
 	{
-		while (y < 300)
+		while(x < wparam->image->width)
 		{
-			mlx_pixel_put(param->mlx, param->win, x , y, 0xFF00FF);
-			++y;
-		}
-		y = 0;
+		my_pixel_put(wparam->image, x, y, 0x0);
 		++x;
+		}
+		x = 0;
+		++y;
 	}
-	return (0);
+}
+
+/*
+** fonction qui zoom en avant 
+*/
+
+int more_zoom(t_wparam *wparam, int ret)
+{
+	wparam->image->wtile = wparam->image->wtile + 2;
+	++wparam->image->htile;
+	ret = ft_draw_img(wparam, wparam->params, wparam->image);
+	return(ret);
+}
+
+/*
+** fonction qui zoom en arriere 
+*/
+
+int less_zoom(t_wparam *wparam,int ret)
+{
+	ret = mlx_clear_window(wparam->mlx, wparam->win);
+	wparam->image->wtile = wparam->image->wtile - 2;
+	--wparam->image->htile;
+	ret = ft_draw_img(wparam, wparam->params, wparam->image);
+	return(ret);
+}
+
+/*
+** fonctions de deplacement cardinal 
+*/
+
+
+int go_right(t_wparam *wparam, int ret)
+{
+	wparam->image->x -= 10;
+	ret = ft_draw_img(wparam, wparam->params, wparam->image);
+	return (ret);
+}
+
+int go_left(t_wparam *wparam, int ret)
+{
+	wparam->image->x += 10;
+	ret = ft_draw_img(wparam, wparam->params, wparam->image);
+	return (ret);
+}
+int go_up(t_wparam *wparam, int ret)
+{
+	wparam->image->y -= 10;
+	ret = ft_draw_img(wparam, wparam->params, wparam->image);
+	return (ret);
+}
+int go_down(t_wparam *wparam, int ret)
+{
+	wparam->image->y += 10;
+	ret = ft_draw_img(wparam, wparam->params, wparam->image);
+	return (ret);
+}
+
+/*
+**fonction qui dessine un carre en appuyant sur une touche du clavier
+*/
+
+int my_key_func(int keycode, t_wparam *wparam)
+{
+	int ret;
+
+	ret = 0;
+	ret = mlx_clear_window(wparam->mlx, wparam->win);//
+	clear_map(wparam);//
+	if (keycode == 14 && wparam->image->wtile < 150000)
+		ret = more_zoom(wparam, ret);
+	if (keycode == 12 &&  wparam->image->wtile > 0)
+		ret = less_zoom(wparam, ret);
+	if (keycode == 2)
+		ret = go_right(wparam, ret);
+	if (keycode == 0)
+		ret = go_left(wparam, ret);
+	if (keycode == 13)
+		ret = go_up(wparam, ret);
+	if (keycode == 1)
+		ret = go_down(wparam, ret);
+	if (keycode == 53)
+		exit(0);
+	return (ret);
 }
 
 /*
@@ -45,13 +123,11 @@ int my_key_func(int keycode, t_wparam *param)
 void my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 {
 	unsigned int i;
-	unsigned int imax; //test pour mars
 
-	//printf("image->width: %d, image->height :%d\n ", image->width, image->height);//
+	if(x >= image->width || y >= image->height)
+		return ;
 	i = ((y * image->width) + x);
-	imax = (image->height * image->width);//test mars
-	if(i < imax) // test mars
-		image->data[i] = pixel; 
+		image->data[i] = pixel;
 }
 
 /*
@@ -82,126 +158,53 @@ t_image *init_struct_img(t_wparam *wparam, int width, int height)
 	image = (t_image *)malloc(sizeof(t_image));
 	image->img = mlx_new_image(wparam->mlx, width, height);
 	image->data = (t_pixel *)mlx_get_data_addr(image->img, &bits_per_pixel, &size_line, &endian);
-	image->height = height;
+	image->htile = 2;
+	image->wtile = 4;
 	image->width = width;
-	image->htile = 1;
-	image->wtile = 2;
-	//printf("bits_per_pixel : %d, size_line : %d\n", bits_per_pixel, size_line);//
-	/*if (bits_per_pixel != 32 || size_line != width * 4)
-	{
-		return (NULL);
-	}*/
+	image->height = height;
+	image->x = 0;
+	image->y = 0;
+	image->color = 0x0094BF8B;
 	return (image);
 }
 
 /*
-**fonction qui trace des droites
+** fonction qui cree une image en memoire
 */
-/*
-void ft_tracer(t_point *pointi, t_point *pointf, t_image *image)
+
+int ft_draw_img(t_wparam *wparam, t_param *params, t_image *image)
 {
-	int dx;
-	int dy;
-	int x;
-	int y;
-	int index;
-
-	dx = pointf->x - pointi->x;
-	dy = pointf->y - pointi->x;
-	x = pointi->x;
-	y = pointf->y;
-	my_pixel_put(image, (x - y) * 20 * image->width / 2 , (x + y) * 10 + image->height / 2 , 0x00FFFFFF);
-	index = dx / 2;
-	if(pointf->x > pointi->x && pointf->y >= pointi->y && (pointf->x - pointi->x) > (pointf->y - pointi->y))
-	{
-		while (x < pointf->x)
-		{
-			ft_putchar('q');//
-			index = index + dy;
-			if( index >= dx)
-			{
-				index = index - dx;
-				y = y + 1;
-			}
-			my_pixel_put(image, (x - y) * 20 * image->width / 2 , (x + y) * 10 + image->height / 2 , 0x00FFFFFF);
-			++x;
-		}
-	}
+	ft_axex(params, image);
+	ft_axey(params, image);
+	mlx_put_image_to_window(wparam->mlx, wparam->win, image->img, image->x, image->y);
+	return (0);
 }
-*/
-
-/*
-**transforme les coordonnes en iso
-*/
-
-/*t_point *ft_cooriso(t_point *point, t_image *image);
-{
- int x;
- int y;
- int z;
-
-x = (point->x - point->y * 
-
-
-
-}
-*/
-
-/*
-** cherche la hauteur et la largeur de l'image
-
-t_param
-*/
-
-
-
-
-
 
 
 /*
-**fonction principal qui construit le graph
+**fonction principal qui construit le graphique
 */
 
 
-int ft_graph(t_param *params, char *win_name)
+int ft_prin_struct(t_param *params, char *win_name)
 {
 	t_wparam *wparam;
 	t_image *image;
-	int x;
-	int y;
+	int ret;
 
-	x = 0;
-	y = 0;
-	wparam = (t_wparam *)malloc(sizeof (t_wparam));
-	wparam->mlx = mlx_init();
-	wparam->win = mlx_new_window(wparam->mlx, 800, 600, win_name);
-	if(!(image = init_struct_img(wparam, 800,600)))
+	ret = 0;
+	if(!(wparam = (t_wparam *)malloc(sizeof (t_wparam))))
 		return (-1);
-	ft_putstr("height : ");//
-	ft_putnbr(params->height);//
-	ft_putstr(" width : ");//
-	ft_putnbr(params->width);//
-	ft_putchar('\n');//
-	while (y < params->height)
-	{
-		while(x < params->width)
-		{	
-			my_pixel_put(image, (x - y) * image->wtile + image->width / 2, (x + y) * image->htile + image->height / 2, 0x00FF0000);
-			ft_putstr("params->tab[y][x] : ");//
-			ft_putnbr(params->tab[y][x]);//
-			ft_putchar('\n');//
-			if(params->tab[y][x] != 0)
-			{
-				ft_putchar('g');//
-				my_pixel_put(image, (x - y) * image->wtile + image->width / 2, ((x + y) - params->tab[y][x]) * image->htile + image->height / 2, 0x00FFFFFF);
-			}
-			++x;
-		}
-		x = 0;
-		++y;
-	}
-	mlx_put_image_to_window(wparam->mlx, wparam->win, image->img, 0, 0);
+	wparam->mlx = mlx_init();
+	wparam->win_width = 1200;
+	wparam->win_height = 900;
+	wparam->win = mlx_new_window(wparam->mlx, wparam->win_width, wparam->win_height, win_name);
+	wparam->image = NULL;
+	wparam->params = params;
+	if(!(image = init_struct_img(wparam, 1200, 900)))
+		return (-1);
+	ret = ft_draw_img(wparam, params, image);
+	wparam->image = image;
 	mlx_key_hook(wparam->win, my_key_func,(t_param *)wparam);
 	mlx_mouse_hook(wparam->win, my_mouse_func,(t_param *)wparam);
 	mlx_loop(wparam->mlx);

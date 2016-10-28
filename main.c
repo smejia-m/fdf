@@ -29,7 +29,7 @@ int main(int ac, char **av)
 	{
 		fd = open(av[1], O_RDONLY);
 		parametres = ft_reader(fd, line);
-		ret = ft_graph(parametres, av[1]);
+		ret = ft_prin_struct(parametres, av[1]);
 	}
 	else
 	{ 

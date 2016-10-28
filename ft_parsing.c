@@ -168,11 +168,7 @@ t_param *ft_reader(int fd, char *line)
 	t_list *lst;
 	t_parse *parametres;
 	t_param *ret;
-	int i;//
-	int j;//
-
-	i = 0;//
-	j = 0;//
+	
 	lst = NULL;
 	if(!(ret = (t_param*)malloc(sizeof(t_param))))
 	return (NULL); 
@@ -195,22 +191,5 @@ t_param *ft_reader(int fd, char *line)
 	ret->height = parametres->index_y; 
 	ret->width = parametres->index_x;
 	ret->tab = conlistab(lst, parametres->index_x, parametres->index_y);
-	/*while(j < ret->height)
-	{
-		while (i < ret->width)
-		{
-			ft_putstr("y : ");//
-			ft_putnbr(j);//
-			ft_putstr(" x : ");//
-			ft_putnbr(i);//
-			ft_putchar('d');//
-			ft_putstr(" z : ");//
-			ft_putnbr(ret->tab[j][i]);//
-			ft_putchar('\n');//
-			++i;
-		}
-		i = 0;
-		j++;
-	}*/
     return (ret);
 }
