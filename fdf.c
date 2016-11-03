@@ -180,6 +180,15 @@ int ft_draw_img(t_wparam *wparam, t_param *params, t_image *image)
 	return (0);
 }
 
+/*
+** fonction qui ferme la fenetre en appuyant sur la croix rouge avec la souris
+*/
+
+int close_cross(int n)
+{
+	exit(n);
+	return(n);
+}
 
 /*
 **fonction principal qui construit le graphique
@@ -206,7 +215,8 @@ int ft_prin_struct(t_param *params, char *win_name)
 	ret = ft_draw_img(wparam, params, image);
 	wparam->image = image;
 	mlx_key_hook(wparam->win, my_key_func,(t_param *)wparam);
+	mlx_hook(wparam->win, 17, (1L << 17), close_cross, 0);
 	mlx_mouse_hook(wparam->win, my_mouse_func,(t_param *)wparam);
 	mlx_loop(wparam->mlx);
-	return (0);
+	return (ret);
 }

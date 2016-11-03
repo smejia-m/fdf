@@ -29,7 +29,7 @@ static int ft_checknum(char *line)
 				i++;
 			else
 			{
-				ft_putstr("error checknum");//
+				ft_putstr("wrong map format");//
 				return (-1);
 			}
 		}
@@ -49,7 +49,7 @@ static int ft_checkline(t_parse *params)
 	{
 		if (params->tmp_len != params->len)
 		{
-			ft_putstr("error checkline");//
+			ft_putstr("wrong number of lines");//
 			return (-1);
 		}
 		else
@@ -128,7 +128,7 @@ static t_list *ft_toplace(t_parse *param, t_list *lst)
 ** fonction qui transforme une liste en tableau des ints
 */
 
-static int **conlistab(t_list *list, int size_x, int size_y)
+static int **convlistab(t_list *list, int size_x, int size_y)
 {
 	int **tab;
 	t_point *point;
@@ -144,15 +144,19 @@ static int **conlistab(t_list *list, int size_x, int size_y)
 			return(NULL);
 	while(j < size_y)
 	{
+		ft_putchar('a');//
 		if(!(tab[j] = (int *)malloc(sizeof(int) * size_x)))
 			return(NULL);
 		while (i < size_x)
 		{
+			ft_putchar('b');//
 			point = list->content;
 			tab[j][i] = point->z;
 			++i;
 			list = list->next;
+			ft_putchar('c');//
 		}
+		ft_putchar('d');//
 		i = 0;
 		j++;
 	}
@@ -178,8 +182,8 @@ t_param *ft_reader(int fd, char *line)
 	{	
 		if(ft_checknum(line) == -1 || ft_checkline(parametres) == -1)
 		{
-			//ft_putstr("ERROR");
-			//return (NULL);
+			ft_putstr(" error\n");
+			return (NULL);
 		}
 		parametres->tab = ft_strsplit(line, ' ');
 		parametres->tmp_len = parametres->len;
@@ -190,6 +194,6 @@ t_param *ft_reader(int fd, char *line)
     ft_lstrev(&lst);
 	ret->height = parametres->index_y; 
 	ret->width = parametres->index_x;
-	ret->tab = conlistab(lst, parametres->index_x, parametres->index_y);
+	ret->tab = convlistab(lst, parametres->index_x, parametres->index_y);
     return (ret);
 }

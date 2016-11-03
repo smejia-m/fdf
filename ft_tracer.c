@@ -6,124 +6,73 @@
 /*   By: smejia-m <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/25 09:56:01 by smejia-m          #+#    #+#             */
-/*   Updated: 2016/10/25 09:56:17 by smejia-m         ###   ########.fr       */
+/*   Updated: 2016/11/01 13:39:28 by smejia-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-
-
 /*
 **fonction qui trace des droites
 */
 
-void traceif(int dx, int dy, int x, int y, t_image *image)
+void		traceif(t_trace trace, t_image *image)
 {
-  int cumul;
-  int i;
-  int xinc;
-  int yinc;
+	int		i;
+	int		cumul;
 
-  xinc = ( dx > 0 ) ? 1 : -1 ;
-  yinc = ( dy > 0 ) ? 1 : -1 ;
-  cumul = dx / 2;
-  i = 1;
-  while (i <= dx) 
-    {
-      x += xinc;
-      cumul += dy;
-      if (cumul >= dx)
-      {
-        cumul -= dx;
-        y += yinc;
-      }
-      my_pixel_put(image, x, y, image->color);
-      i++;
-    }
+	cumul = trace.dx / 2;
+	i = 1;
+	while (i <= trace.dx)
+	{
+		trace.x += trace.xinc;
+		cumul += trace.dy;
+		if (cumul >= trace.dx)
+		{
+			cumul -= trace.dx;
+			trace.y += trace.yinc;
+		}
+		my_pixel_put(image, trace.x, trace.y, image->color);
+		i++;
+	}
 }
 
-
-void traceelse(int dx, int dy, int x, int y, t_image *image)
+void		traceelse(t_trace trace, t_image *image)
 {
-  int cumul;
-  int i;
-  int xinc;
-  int yinc;
+	int		cumul;
+	int		i;
 
-
-  xinc = ( dx > 0 ) ? 1 : -1 ;
-  yinc = ( dy > 0 ) ? 1 : -1 ;
-  cumul = dy / 2;
-  i = 1;
-  while (i <= dy)
-    {
-      y += yinc;
-      cumul += dx;
-      if (cumul >= dy)
-      {
-        cumul -= dy;
-        x += xinc;
-      }
-      my_pixel_put(image, x, y, image->color);
-      i++;
-    }
+	cumul = trace.dy / 2;
+	i = 1;
+	while (i <= trace.dy)
+	{
+		trace.y += trace.yinc;
+		cumul += trace.dx;
+		if (cumul >= trace.dy)
+		{
+			cumul -= trace.dy;
+			trace.x += trace.xinc;
+		}
+		my_pixel_put(image, trace.x, trace.y, image->color);
+		i++;
+	}
 }
- 
-void  ft_tracer(int xi, int yi, int xf, int yf, t_image *image) 
-{
-  int dx;
-  int dy;
-  int i;
-  int xinc;
-  int yinc;
-  int cumul;
-  int x;
-  int y;
 
-  x = xi;
-  y = yi;
-  dx = xf - xi;
-  dy = yf - yi;
-  xinc = ( dx > 0 ) ? 1 : -1 ;
-  yinc = ( dy > 0 ) ? 1 : -1 ;
-  dx = abs(dx);
-  dy = abs(dy);
-  my_pixel_put(image, x, y, image->color);
-  if (dx > dy)
-  {
-    traceif(dx, dy, x, y, image);
-  	/*cumul = dx / 2;
-    i = 1;
-    while (i <= dx) 
-    {
-      x += xinc;
-      cumul += dy;
-      if (cumul >= dx)
-      {
-        cumul -= dx;
-        y += yinc;
-      }
-     my_pixel_put(image, x, y, image->color);
-      i++;
-    }*/
-  }
-  else
-  {
-    //traceelse(dx, dy, x, y, image);
-  	cumul = dy / 2;
-  	i = 1;
-    while (i <= dy)
-    {
-      y += yinc;
-      cumul += dx;
-      if (cumul >= dy)
-      {
-        cumul -= dy;
-        x += xinc;
-      }
-    //my_pixel_put(image, x, y, image->color);
-    i++;
-  	}
-  }
+void		ft_tracer(int xi, int yi, int xf, int yf, t_image *image)
+{
+	t_trace	trace;
+
+	trace.x = xi;
+	trace.y = yi;
+	trace.dx = xf - xi;
+	trace.dy = yf - yi;
+	trace.xinc = (trace.dx > 0) ? 1 : -1;
+	trace.yinc = (trace.dy > 0) ? 1 : -1;
+	trace.dx = abs(trace.dx);
+	trace.dy = abs(trace.dy);
+	my_pixel_put(image, trace.x, trace.y, image->color);
+	if (trace.dx > trace.dy)
+		traceif(trace, image);
+	else
+		traceelse(trace, image);
 }

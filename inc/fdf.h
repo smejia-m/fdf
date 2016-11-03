@@ -16,7 +16,6 @@ typedef struct	s_point
 	int z;
 }				t_point;
 
-// struct parse
 typedef struct	s_parse
 {
 	char		**tab;
@@ -34,7 +33,6 @@ typedef struct s_param
 	int			height;
 	int			width;
 }				t_param;
-
 
 typedef struct s_image
 {
@@ -59,17 +57,15 @@ typedef struct s_wparam
 	t_param		*params;
 }				t_wparam;
 
-/*typedef struct s_coo
+typedef struct s_trace
 {
 	int x;
 	int y;
-	int xi;
-	int yi;
-	int xf;
-	int yf;
-}				t_coo;
-*/
-
+	int dx;
+	int dy;
+	int xinc;
+	int yinc;
+}				t_trace;
 
 t_param			*ft_reader(int fd, char *line);
 int 			ft_prin_struct(t_param *parametres, char *str);
