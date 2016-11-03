@@ -144,23 +144,33 @@ static int **convlistab(t_list *list, int size_x, int size_y)
 			return(NULL);
 	while(j < size_y)
 	{
-		ft_putchar('a');//
 		if(!(tab[j] = (int *)malloc(sizeof(int) * size_x)))
 			return(NULL);
 		while (i < size_x)
 		{
-			ft_putchar('b');//
 			point = list->content;
 			tab[j][i] = point->z;
 			++i;
 			list = list->next;
-			ft_putchar('c');//
 		}
-		ft_putchar('d');//
 		i = 0;
 		j++;
 	}
 	return(tab);
+}
+
+/*
+** fonction verification d'erreur
+*/
+
+int ft_checkerror(char *line, t_parse *parametres)
+{
+	if(ft_checknum(line) == -1 || ft_checkline(parametres) == -1)
+		{
+			ft_putstr(" error\n");
+			return (-1);
+		}
+	return (0);
 }
 
 /*
@@ -180,19 +190,18 @@ t_param *ft_reader(int fd, char *line)
 		return (NULL);
 	while ((parametres->ret = get_next_line(fd, &line) > 0))
 	{	
-		if(ft_checknum(line) == -1 || ft_checkline(parametres) == -1)
-		{
-			ft_putstr(" error\n");
-			return (NULL);
-		}
+		if(ft_checkerror(line,parametres) == -1)
+			return(NULL);
 		parametres->tab = ft_strsplit(line, ' ');
 		parametres->tmp_len = parametres->len;
 		parametres->len = count(line, ' ');
 		lst = ft_toplace(parametres, lst);
 		parametres->index_y++;
     }
+    if(ft_checkerror(line,parametres) == -1)
+			return(NULL);
     ft_lstrev(&lst);
-	ret->height = parametres->index_y; 
+	ret->height = parametres->index_y;
 	ret->width = parametres->index_x;
 	ret->tab = convlistab(lst, parametres->index_x, parametres->index_y);
     return (ret);
