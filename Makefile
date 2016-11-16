@@ -12,7 +12,7 @@
 
 NAME = fdf
 
-SRC = main.c fdf.c ft_parsing.c ft_tracer.c ft_graph.c
+SRC = main.c fdf.c ft_parsing.c ft_tracer.c ft_graph.c ft_reader.c ft_init.c
 
 OBJ		= $(SRC:.c=.o)
 

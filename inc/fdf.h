@@ -75,4 +75,6 @@ void 			my_pixel_put(t_image *image, int x, int y, t_pixel pixel);
 void 			ft_axey(t_param *params, t_image *image);
 void			ft_axex(t_param *params, t_image *image);
 int				ft_draw_img(t_wparam *wparam, t_param *params, t_image *image);
+int				ft_parsing(char *line, t_parse *parametres);
+t_parse			*ft_parse_ini(void);
 #endif
