@@ -13,7 +13,7 @@
 #include "fdf.h"
 
 /*
-**fonction qui initisialise la structure param
+**fonction qui initisialise la structure t_parse
 */
 
 t_parse			*ft_parse_ini(void)

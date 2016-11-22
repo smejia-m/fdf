@@ -20,29 +20,27 @@ static int		**convlistab(t_list *list, int size_x, int size_y)
 {
 	int			**tab;
 	t_point		*point;
-	int			i;
-	int			j;
+	t_point		inc;
 
 	if (!(tab = (int **)malloc(sizeof(int) * size_y)))
 		return (NULL);
-	point = NULL;
-	i = 0;
-	j = 0;
-	if (!(tab[j] = (int *)malloc(sizeof(int) * size_x)))
+	inc.x = 0;
+	inc.y = 0;
+	if (!(tab[inc.y] = (int *)malloc(sizeof(int) * size_x)))
 		return (NULL);
-	while (j < size_y)
+	while (inc.y < size_y)
 	{
-		if (!(tab[j] = (int *)malloc(sizeof(int) * size_x)))
+		if (!(tab[inc.y] = (int *)malloc(sizeof(int) * size_x)))
 			return (NULL);
-		while (i < size_x)
+		while (inc.x < size_x)
 		{
 			point = list->content;
-			tab[j][i] = point->z;
-			++i;
+			tab[inc.y][inc.x] = point->z;
+			++inc.x;
 			list = list->next;
 		}
-		i = 0;
-		j++;
+		inc.x = 0;
+		inc.y++;
 	}
 	return (tab);
 }
@@ -106,8 +104,7 @@ t_param			*ft_reader(int fd, char *line)
 	lst = NULL;
 	if (!(ret = (t_param*)malloc(sizeof(t_param))))
 		return (NULL);
-	if (!(parametres = ft_parse_ini()))
-		return (NULL);
+	parametres = ft_parse_ini();
 	while ((parametres->ret = get_next_line(fd, &line) > 0))
 	{
 		if (ft_parsing(line, parametres) == -1)
