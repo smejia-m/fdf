@@ -16,7 +16,6 @@
 # include "mlx.h"
 # include <fcntl.h>
 # include <math.h>
-# include <stdio.h>//
 
 typedef unsigned char	t_byte;
 typedef unsigned int	t_pixel;
@@ -89,4 +88,12 @@ void			ft_axex(t_param *params, t_image *image);
 int				ft_draw_img(t_wparam *wparam, t_param *params, t_image *image);
 int				ft_parsing(char *line, t_parse *parametres);
 t_parse			*ft_parse_ini(void);
+void			trace_dx(int x, int y, t_image *image);
+void			trace_dy(int x, int y, t_image *image);
+void			trace_dxz(int x, int y, int **tab, t_image *image);
+void			trace_dyz(int x, int y, int **tab, t_image *image);
+int				ft_isocoorz(int x, int y, int z, t_image *image);
+int				ft_isocoory(int x, int y, t_image *image);
+int				ft_isocoorx(int x, int y, t_image *image);
+t_pixel			ft_color(int z);
 #endif

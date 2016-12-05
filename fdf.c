@@ -136,10 +136,8 @@ void			my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 
 int				my_mouse_func(int mousecode, int x, int y, t_wparam *param)
 {
-	printf("mouse event %d\n", mousecode);
-	printf("coor x %d\n", x);
-	printf("coor y %d\n", y);
 	mlx_pixel_put(param->mlx, param->win, x, y, 0xFFFFFF);
+	ft_putnbr(mousecode);
 	return (0);
 }
 
