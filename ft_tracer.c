@@ -23,7 +23,7 @@ void		traceif(t_trace trace, t_image *image)
 
 	cumul = trace.dx / 2;
 	i = 1;
-	while (i <= trace.dx)
+	while (i <= trace.dx) 
 	{
 		trace.x += trace.xinc;
 		cumul += trace.dy;

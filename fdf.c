@@ -99,7 +99,7 @@ int				my_key_func(int keycode, t_wparam *wparam)
 	ret = 0;
 	ret = mlx_clear_window(wparam->mlx, wparam->win);
 	clear_map(wparam);
-	if (keycode == 14 && wparam->image->wtile < 150000)
+	if (keycode == 14 && wparam->image->wtile < 50)
 		ret = more_zoom(wparam, ret);
 	if (keycode == 12 && wparam->image->wtile > 0)
 		ret = less_zoom(wparam, ret);
@@ -123,11 +123,17 @@ int				my_key_func(int keycode, t_wparam *wparam)
 void			my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 {
 	unsigned int i;
+	unsigned int len;//
 
+	len = 0;//
 	if (x >= image->width || y >= image->height)
 		return ;
 	i = ((y * image->width) + x);
+	len = ft_strlen(image->data);//
+	if (len < i)//
+		return;//
 	image->data[i] = pixel;
+		return ;
 }
 
 /*
@@ -203,14 +209,14 @@ int				ft_prin_struct(t_param *params, char *win_name)
 	if (!(wparam = (t_wparam *)malloc(sizeof(t_wparam))))
 		return (-1);
 	wparam->mlx = mlx_init();
-	wparam->win_width = 1200;
-	wparam->win_height = 900;
+	wparam->win_width = 1600;
+	wparam->win_height = 1200;
 	wparam->win =
 	mlx_new_window(wparam->mlx,
 	wparam->win_width, wparam->win_height, win_name);
 	wparam->image = NULL;
 	wparam->params = params;
-	if (!(image = init_struct_img(wparam, 1200, 900)))
+	if (!(image = init_struct_img(wparam, 1600, 1200)))
 		return (-1);
 	ret = ft_draw_img(wparam, params, image);
 	wparam->image = image;
