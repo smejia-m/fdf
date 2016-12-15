@@ -32,63 +32,6 @@ void			clear_map(t_wparam *wparam)
 }
 
 /*
-** fonction qui zoom en avant
-*/
-
-int				more_zoom(t_wparam *wparam, int ret)
-{
-	wparam->image->wtile = wparam->image->wtile + 2;
-	++wparam->image->htile;
-	ret = ft_draw_img(wparam, wparam->params, wparam->image);
-	return (ret);
-}
-
-/*
-** fonction qui zoom en arriere
-*/
-
-int				less_zoom(t_wparam *wparam, int ret)
-{
-	ret = mlx_clear_window(wparam->mlx, wparam->win);
-	wparam->image->wtile = wparam->image->wtile - 2;
-	--wparam->image->htile;
-	ret = ft_draw_img(wparam, wparam->params, wparam->image);
-	return (ret);
-}
-
-/*
-** fonctions de deplacement cardinal
-*/
-
-int				go_right(t_wparam *wparam, int ret)
-{
-	wparam->image->x -= 10;
-	ret = ft_draw_img(wparam, wparam->params, wparam->image);
-	return (ret);
-}
-
-int				go_left(t_wparam *wparam, int ret)
-{
-	wparam->image->x += 10;
-	ret = ft_draw_img(wparam, wparam->params, wparam->image);
-	return (ret);
-}
-
-int				go_up(t_wparam *wparam, int ret)
-{
-	wparam->image->y -= 10;
-	ret = ft_draw_img(wparam, wparam->params, wparam->image);
-	return (ret);
-}
-
-int				go_down(t_wparam *wparam, int ret)
-{
-	wparam->image->y += 10;
-	ret = ft_draw_img(wparam, wparam->params, wparam->image);
-	return (ret);
-}
-
-/*
 **fonction qui dessine un carre en appuyant sur une touche du clavier
 */
 
@@ -99,20 +42,14 @@ int				my_key_func(int keycode, t_wparam *wparam)
 	ret = 0;
 	ret = mlx_clear_window(wparam->mlx, wparam->win);
 	clear_map(wparam);
-	if (keycode == 14 && wparam->image->wtile < 50)
+	if (keycode == 14 && wparam->image->wtile < wparam->win_width)
 		ret = more_zoom(wparam, ret);
 	if (keycode == 12 && wparam->image->wtile > 0)
 		ret = less_zoom(wparam, ret);
-	if (keycode == 2)
-		ret = go_right(wparam, ret);
-	if (keycode == 0)
-		ret = go_left(wparam, ret);
-	if (keycode == 13)
-		ret = go_up(wparam, ret);
-	if (keycode == 1)
-		ret = go_down(wparam, ret);
 	if (keycode == 53)
 		exit(0);
+	if (keycode == 3)
+		ret = aug_z(wparam, ret);
 	return (ret);
 }
 
@@ -123,53 +60,12 @@ int				my_key_func(int keycode, t_wparam *wparam)
 void			my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 {
 	unsigned int i;
-	unsigned int len;//
 
-	len = 0;//
 	if (x >= image->width || y >= image->height)
 		return ;
 	i = ((y * image->width) + x);
-	len = ft_strlen(image->data);//
-	if (len < i)//
-		return;//
 	image->data[i] = pixel;
-		return ;
-}
-
-/*
-**fonction qui dessine un pixel lorsque on clique sur la souris
-*/
-
-int				my_mouse_func(int mousecode, int x, int y, t_wparam *param)
-{
-	mlx_pixel_put(param->mlx, param->win, x, y, 0xFFFFFF);
-	ft_putnbr(mousecode);
-	return (0);
-}
-
-/*
-** fonction qu'initialise la structure image
-*/
-
-t_image			*init_struct_img(t_wparam *wparam, int width, int height)
-{
-	t_image		*image;
-	int			bits_per_pixel;
-	int			size_line;
-	int			endian;
-
-	image = (t_image *)malloc(sizeof(t_image));
-	image->img = mlx_new_image(wparam->mlx, width, height);
-	image->data = (t_pixel *)mlx_get_data_addr(image->img,
-	&bits_per_pixel, &size_line, &endian);
-	image->htile = 2;
-	image->wtile = 4;
-	image->width = width;
-	image->height = height;
-	image->x = 0;
-	image->y = 0;
-	image->color = 0x0094BF8B;
-	return (image);
+	return ;
 }
 
 /*
@@ -181,18 +77,8 @@ int				ft_draw_img(t_wparam *wparam, t_param *params, t_image *image)
 	ft_axex(params, image);
 	ft_axey(params, image);
 	mlx_put_image_to_window(wparam->mlx,
-		wparam->win, image->img, image->x, image->y);
+		wparam->win, image->img, 0, 0);
 	return (0);
-}
-
-/*
-** fonction qui ferme la fenetre en appuyant sur la croix rouge avec la souris
-*/
-
-int				close_cross(int n)
-{
-	exit(n);
-	return (n);
 }
 
 /*

@@ -20,7 +20,7 @@ int		ft_isocoorx(int x, int y, t_image *image)
 {
 	int ret;
 
-	ret = (x - y) * image->wtile + image->width / 3;
+	ret = (x - y) * image->wtile + image->width / 2;
 	return (ret);
 }
 
@@ -28,7 +28,7 @@ int		ft_isocoory(int x, int y, t_image *image)
 {
 	int ret;
 
-	ret = (x + y) * image->htile + image->height / 3;
+	ret = (x + y) * image->htile + image->height / 2;
 	return (ret);
 }
 
@@ -36,6 +36,6 @@ int		ft_isocoorz(int x, int y, int z, t_image *image)
 {
 	int	ret;
 
-	ret = (x + y - z) * image->htile + image->height / 3;
+	ret = (x + y - z) * image->htile + image->height / 2;
 	return (ret);
 }

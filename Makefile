@@ -13,7 +13,7 @@
 NAME = fdf
 
 SRC = main.c fdf.c ft_parsing.c ft_tracer.c ft_graph.c ft_reader.c ft_init.c \
-	ft_trace_d.c ft_isocoor.c ft_color.c
+	ft_trace_d.c ft_isocoor.c ft_color.c ft_bonus1.c
 
 OBJ		= $(SRC:.c=.o)
 

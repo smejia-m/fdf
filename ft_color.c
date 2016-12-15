@@ -48,9 +48,9 @@ static t_pixel	ft_color_moins(int z)
 	return (0x000978AB);
 }
 
-t_pixel	ft_color(int z)
+t_pixel			ft_color(int z)
 {
-	t_pixel pixel;
+	t_pixel	pixel;
 
 	pixel = 0x00FFFFFF;
 	if (z >= 0)
@@ -63,4 +63,3 @@ t_pixel	ft_color(int z)
 	}
 	return (pixel);
 }
-

@@ -53,8 +53,6 @@ typedef struct	s_image
 	int			width;
 	int			htile;
 	int			wtile;
-	int			x;
-	int			y;
 	t_pixel		color;
 }				t_image;
 
@@ -78,10 +76,18 @@ typedef struct	s_trace
 	int			yinc;
 }				t_trace;
 
+typedef struct	s_xy
+{
+	int 		xi;
+	int 		yi;
+	int 		xf;
+	int 		yf;
+}				t_xy;
+
 t_param			*ft_reader(int fd, char *line);
 int				ft_prin_struct(t_param *parametres, char *str);
 int				my_key_func(int keycode, t_wparam *wparam);
-void			ft_tracer(int xi, int yi, int xf, int yf, t_image *image);
+void			ft_tracer(t_xy coor, t_image *image);
 void			my_pixel_put(t_image *image, int x, int y, t_pixel pixel);
 void			ft_axey(t_param *params, t_image *image);
 void			ft_axex(t_param *params, t_image *image);
@@ -96,4 +102,10 @@ int				ft_isocoorz(int x, int y, int z, t_image *image);
 int				ft_isocoory(int x, int y, t_image *image);
 int				ft_isocoorx(int x, int y, t_image *image);
 t_pixel			ft_color(int z);
+int				more_zoom(t_wparam *wparam, int ret);
+int				less_zoom(t_wparam *wparam, int ret);
+int				close_cross(int n);
+t_image			*init_struct_img(t_wparam *wparam, int width, int height);
+int				my_mouse_func(int mousecode, int x, int y, t_wparam *param);
+int				aug_z(t_wparam *wparam, int ret);
 #endif

@@ -23,7 +23,7 @@ void		traceif(t_trace trace, t_image *image)
 
 	cumul = trace.dx / 2;
 	i = 1;
-	while (i <= trace.dx) 
+	while (i <= trace.dx)
 	{
 		trace.x += trace.xinc;
 		cumul += trace.dy;
@@ -58,14 +58,14 @@ void		traceelse(t_trace trace, t_image *image)
 	}
 }
 
-void		ft_tracer(int xi, int yi, int xf, int yf, t_image *image)
+void		ft_tracer(t_xy coor, t_image *image)
 {
 	t_trace	trace;
 
-	trace.x = xi;
-	trace.y = yi;
-	trace.dx = xf - xi;
-	trace.dy = yf - yi;
+	trace.x = coor.xi;
+	trace.y = coor.yi;
+	trace.dx = coor.xf - coor.xi;
+	trace.dy = coor.yf - coor.yi;
 	trace.xinc = (trace.dx > 0) ? 1 : -1;
 	trace.yinc = (trace.dy > 0) ? 1 : -1;
 	trace.dx = abs(trace.dx);
