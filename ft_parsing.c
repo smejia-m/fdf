@@ -21,7 +21,7 @@ static int	ft_checknum(char *line)
 	int		i;
 
 	i = 0;
-	while (line[i])
+	while (line != NULL && line[i])
 	{
 		if (line[i] < '0' || line[i] > '9')
 		{
