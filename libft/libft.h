@@ -87,4 +87,7 @@ void				ft_lstrev(t_list **list);
 size_t				ft_lstcount(t_list *lst);
 char				*ft_strndup(const char *s1, size_t n);
 int					get_next_line(int const fd, char **line);
+char				*ft_strsub_and_free(char *s,
+					unsigned int start, size_t len);
+char				*ft_strjoin_and_free(char *s1, char *s2);
 #endif

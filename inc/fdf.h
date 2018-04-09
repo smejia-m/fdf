@@ -78,10 +78,10 @@ typedef struct	s_trace
 
 typedef struct	s_xy
 {
-	int 		xi;
-	int 		yi;
-	int 		xf;
-	int 		yf;
+	int			xi;
+	int			yi;
+	int			xf;
+	int			yf;
 }				t_xy;
 
 t_param			*ft_reader(int fd, char *line);

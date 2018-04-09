@@ -14,8 +14,8 @@
 
 void			clear_map(t_wparam *wparam)
 {
-	int			x;
-	int			y;
+	int				x;
+	int				y;
 
 	x = 0;
 	y = 0;
@@ -37,14 +37,12 @@ void			clear_map(t_wparam *wparam)
 
 int				my_key_func(int keycode, t_wparam *wparam)
 {
-	int			ret;
+	int				ret;
 
 	ret = 0;
-	//ret = mlx_clear_window(wparam->mlx, wparam->win);
 	clear_map(wparam);
-	ft_putnbr(keycode);//
-	ft_putchar('\n');//
-	if (keycode == 14 && wparam->image->wtile < 600 && wparam->image->htile < 800 )
+	if (keycode == 14 && wparam->image->wtile < 600
+		&& wparam->image->htile < 800)
 		ret = more_zoom(wparam, ret);
 	if (keycode == 12 && wparam->image->wtile > 0)
 		ret = less_zoom(wparam, ret);
@@ -63,16 +61,19 @@ int				my_key_func(int keycode, t_wparam *wparam)
 
 void			my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 {
-	unsigned int i;
-	unsigned int j;
+	unsigned int	i;
+	unsigned int	j;
+	int				min;
 
+	min = 1 + image->wtile;
 	if (x >= image->width || y >= image->height)
 		return ;
 	i = ((y * image->width) + x);
 	j = image->height * image->width;
 	if (i >= j)
-		return;
-	image->data[i] = pixel;
+		return ;
+	if ((i < j) && (x <= image->width) && (x > min))
+		image->data[i] = pixel;
 	return ;
 }
 

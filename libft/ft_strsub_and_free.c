@@ -1,28 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strsub_and_free.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smejia-m <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/05 15:45:53 by smejia-m          #+#    #+#             */
-/*   Updated: 2016/09/05 18:16:53 by smejia-m         ###   ########.fr       */
+/*   Created: 2018/04/09 14:05:33 by smejia-m          #+#    #+#             */
+/*   Updated: 2018/04/09 14:06:47 by smejia-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# include "libft.h"
-# include <unistd.h>
-# include <stdlib.h>
-# define BUFF_SIZE 29
+#include "libft.h"
 
-typedef struct		s_struct
+char	*ft_strsub_and_free(char *s, unsigned int start, size_t len)
 {
-	char			*tmp;
-	int				fd;
-	struct s_struct	*next;
-}					t_stock;
+	size_t	i;
+	char	*dest;
+	int		j;
 
-int					get_next_line(const int fd, char **line);
-#endif
+	j = 0;
+	i = len;
+	dest = NULL;
+	if (s)
+	{
+		if (!(dest = (char*)malloc(sizeof(char) * (len + 1))))
+			return (NULL);
+		while (i > 0)
+		{
+			dest[j] = s[start];
+			i--;
+			j++;
+			start++;
+		}
+		dest[j] = '\0';
+		ft_strdel(&s);
+		return (dest);
+	}
+	return (NULL);
+}

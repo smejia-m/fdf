@@ -35,6 +35,7 @@ int			main(int ac, char **av)
 		if (parametres == NULL)
 			return (-1);
 		ret = ft_prin_struct(parametres, av[1]);
+	//free(parametres);//	
 	}
 	else
 		ret = tma_error();

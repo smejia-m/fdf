@@ -22,7 +22,7 @@ static int		**convlistab(t_list *list, int size_x, int size_y)
 	t_point		*point;
 	t_point		inc;
 
-	if (!(tab = (int **)malloc(sizeof(int) * size_y)))
+	if (!(tab = (int **)malloc(sizeof(int*) * size_y)))
 		return (NULL);
 	inc.x = 0;
 	inc.y = 0;
@@ -42,6 +42,7 @@ static int		**convlistab(t_list *list, int size_x, int size_y)
 		inc.x = 0;
 		inc.y++;
 	}
+	
 	return (tab);
 }
 
@@ -92,6 +93,17 @@ static	int		count(char const *s, char c)
 }
 
 /*
+** fonction test delone
+*/
+
+static	void	lstdelone_test(void *d, size_t n) 
+{
+	free(d);
+	(void)n;
+}
+
+
+/*
 ** fonction qui lit la map separe les lignes et les mets dans une structure
 */
 
@@ -108,7 +120,10 @@ t_param			*ft_reader(int fd, char *line)
 	while ((parametres->ret = get_next_line(fd, &line) > 0))
 	{
 		if (ft_parsing(line, parametres) == -1)
+		{
+			ft_strdel(&line);
 			return (NULL);
+		}
 		parametres->tab = ft_strsplit(line, ' ');
 		parametres->tmp_len = parametres->len;
 		parametres->len = count(line, ' ');
@@ -116,10 +131,15 @@ t_param			*ft_reader(int fd, char *line)
 		parametres->index_y++;
 	}
 	if (ft_parsing(line, parametres) == -1)
+	{
+		ft_strdel(&line);
 		return (NULL);
+	}
 	ft_lstrev(&lst);
 	ret->height = parametres->index_y;
 	ret->width = parametres->index_x;
 	ret->tab = convlistab(lst, parametres->index_x, parametres->index_y);
+	ft_lstdel(&lst, lstdelone_test);
+	ft_strdel(&line);
 	return (ret);
 }

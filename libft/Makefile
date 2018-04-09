@@ -23,7 +23,8 @@ SRC = ft_abs.c ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c \
 	ft_strlcat.c ft_strlen.c ft_strmap.c ft_strmapi.c ft_strncat.c \
 	ft_strncmp.c ft_strncpy.c ft_strndup.c ft_strnequ.c ft_strnew.c ft_strnstr.c \
 	ft_strrchr.c ft_strrev.c ft_strsplit.c ft_strstr.c ft_strsub.c \
-	ft_strtrim.c ft_swap.c ft_tolower.c ft_toupper.c get_next_line.c 
+	ft_strtrim.c ft_swap.c ft_tolower.c ft_toupper.c ft_strsub_and_free.c \
+	ft_strjoin_and_free.c get_next_line.c 
 
 OBJECTS = $(SRC:.c=.o)
 

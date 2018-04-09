@@ -14,6 +14,8 @@
 
 /*
 ** dessine les axes x
+** if droites haut et descendantes  x
+** else droites bases x
 */
 
 void	ft_axex(t_param *params, t_image *image)
@@ -27,15 +29,9 @@ void	ft_axex(t_param *params, t_image *image)
 	{
 		while (x < params->width - 1)
 		{
-			if (params->tab[y][x] != 0)//droites haut et descendantes  x
-			{
+			if ((params->tab[y][x] != 0) || (params->tab[y][x + 1] != 0))
 				trace_dxz(x, y, params->tab, image);
-			}
-			else if (params->tab[y][x + 1] != 0)// droites montantes x
-			{
-				trace_dxz(x, y, params->tab, image);
-			}
-			else // droites bases x
+			else
 				trace_dx(x, y, image);
 			++x;
 		}
@@ -46,6 +42,8 @@ void	ft_axex(t_param *params, t_image *image)
 
 /*
 ** dessine les axes y
+** if droites hautes, descendantes y et droites momtantes y
+** else droites bases x
 */
 
 void	ft_axey(t_param *params, t_image *image)
@@ -59,11 +57,9 @@ void	ft_axey(t_param *params, t_image *image)
 	{
 		while (y < params->height - 1)
 		{
-			if (params->tab[y][x] != 0)//droites hautes et descendantes y
+			if ((params->tab[y][x] != 0) || (params->tab[y + 1][x] != 0))
 				trace_dyz(x, y, params->tab, image);
-			else if (params->tab[y + 1][x] != 0)//droites momtantes y
-				trace_dyz(x, y, params->tab, image);
-			else // droites bases y
+			else
 				trace_dy(x, y, image);
 			++y;
 		}

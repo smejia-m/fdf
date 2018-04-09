@@ -35,33 +35,6 @@ static t_pixel	ft_color_plus(int z)
 	return (0x00ACD0A5);
 }
 
-// static t_pixel	ft_color_plus(int ref)
-// {
-// 	if (ref < -10)
-// 		return (255 * (23 * 1));
-// 	else if (ref < -8)
-// 		return (255 * (23 * 2));
-// 	else if (ref < -6)
-// 		return (255 * (23 * 3));
-// 	else if (ref < -4)
-// 		return (255 * (23 * 4));
-// 	else if (ref < -2)
-// 		return (255 * (23 * 5));
-// 	else if (ref < 0)
-// 		return (255 * (23 * 6));
-// 	else if (ref < 2)
-// 		return (255 * (23 * 7));
-// 	else if (ref < 4)
-// 		return (255 * (23 * 8));
-// 	else if (ref < 6)
-// 		return (255 * (23 * 9));
-// 	else if (ref < 8)
-// 		return (255 * (23 * 10));
-// 	else
-// 		return (255 * (23 * 11));
-// }
-
-
 static t_pixel	ft_color_moins(int z)
 {
 	if (z < -10)

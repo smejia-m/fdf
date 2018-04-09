@@ -12,125 +12,120 @@
 
 #include "get_next_line.h"
 
-char				*ft_strjoin_and_free(char *s1, char *s2)
-{
-	size_t			lens1;
-	size_t			lens2;
-	char			*newstr;
+/*
+** ft qui verifie le fd, cree struct et stock tmp et fd si non trouve
+*/
 
-	lens1 = 0;
-	lens2 = 0;
-	if (s1 && s2)
+static t_stock		*ft_struct(const int fd, t_list **list)
+{
+	t_stock			*data;
+	t_list			*link;
+
+	link = *list;
+	while (link != NULL)
 	{
-		lens1 = ft_strlen(s1);
-		lens2 = ft_strlen(s2);
-		newstr = ft_strnew(lens1 + lens2 + 1);
-		if (newstr)
-		{
-			newstr = ft_strcat(newstr, s1);
-			newstr = ft_strcat(newstr, s2);
-			free(s1);
-			ft_strclr(s2);
-			return (newstr);
-		}
+		data = (t_stock*)link->content;
+		if (data->fd == fd)
+			return (data);
+		link = link->next;
 	}
-	return (NULL);
+	if (!(link = (t_list*)malloc(sizeof(t_list))))
+		return (NULL);
+	link->next = NULL;
+	if (!(data = (t_stock*)malloc(sizeof(t_stock))))
+		return (NULL);
+	data->tmp = ft_memalloc(1);
+	data->fd = fd;
+	data->next = data;
+	link->content = (t_stock*)data;
+	ft_lstadd(list, link);
+	return (data);
 }
 
-static t_tools		*ft_distrib_fd(int const fd, t_list **list)
+/*
+** ft qui check pour \n
+*/
+
+static int			ft_check(char **line, t_stock **data)
 {
-	t_list			*list_tmp;
-	t_tools			*tools;
+	size_t			c;
+	size_t			len;
+	char			*str;
 
-	list_tmp = *list;
-	while (list_tmp)
+	len = ft_strlen((*data)->tmp);
+	str = ft_strdup((*data)->tmp);
+	c = 0;
+	if (str != NULL)
 	{
-		tools = (t_tools*)list_tmp->content;
-		if (fd == tools->fd)
-			return (tools);
-		list_tmp = list_tmp->next;
-	}
-	if (!(list_tmp = (t_list*)ft_memalloc(sizeof(t_list))))
-		return (NULL);
-	list_tmp->next = NULL;
-	if (!(tools = (t_tools*)ft_memalloc(sizeof(t_tools))))
-		return (NULL);
-	tools->fd = fd;
-	tools->stock = ft_strnew(0);
-	list_tmp->content = (t_tools*)tools;
-	ft_lstadd(list, list_tmp);
-	return (tools);
-}
-
-static int			ft_check_stock(t_tools **tools, char **line)
-{
-	int				i;
-	int				len;
-	char			*tmp_stock;
-
-	i = 0;
-	if ((*tools)->stock != NULL)
-	{
-		while ((*tools)->stock[i])
+		while (str[c] != '\0')
 		{
-			if ((*tools)->stock[i] == '\n')
+			if (str[c] == '\n')
 			{
-				tmp_stock = (*tools)->stock;
-				*line = ft_strndup((*tools)->stock, i);
-				len = (int)ft_strlen((*tools)->stock);
-				++i;
-				(*tools)->stock = ft_strsub((*tools)->stock, i, len);
-				free(tmp_stock);
+				*line = ft_strsub(str, 0, c);
+				c++;
+				ft_strdel(&((*data)->tmp));
+				(*data)->tmp = ft_strsub_and_free(str, c, len);
 				return (1);
 			}
-			++i;
+			c++;
 		}
 	}
+	ft_strdel(&str);
 	return (0);
 }
 
-static int			ft_reader(t_tools **tools, char **line)
-{
-	char			*buf;
-	int				lu;
-	int				ok;
+/*
+** fonction qui lit et stock ds tmp et check
+*/
 
-	ok = 0;
-	lu = 0;
-	if (!(buf = (char*)malloc(sizeof(char) * (BUFF_SIZE + 1))))
-		return (-1);
-	while ((lu = read((*tools)->fd, buf, BUFF_SIZE)) > 0)
+static int			ft_read(t_stock **data, char **line, int i)
+{
+	char			*buffer;
+
+	buffer = ft_strnew(BUFF_SIZE);
+	while ((i = read((*data)->fd, buffer, BUFF_SIZE)) > 0)
 	{
-		buf[lu] = '\0';
-		(*tools)->stock = ft_strjoin_and_free((*tools)->stock, buf);
-		if ((ok = 1) && ft_check_stock(tools, *&line))
+		(*data)->tmp = ft_strjoin_and_free((*data)->tmp, buffer);
+		if ((ft_check(line, data)))
+		{
+			ft_strdel(&buffer);
 			return (1);
-		ft_strclr(buf);
+		}
 	}
-	if (lu < 0)
-		return (-1);
-	if (ok)
+	if (i < 0)
 	{
-		lu = ft_strlen((*tools)->stock);
-		*line = ft_strndup((*tools)->stock, lu);
+		ft_strdel(&buffer);
+		return (-1);
+	}
+	if (ft_strlen((*data)->tmp) > 0)
+	{
+		i = 1;
+		*line = ft_strdup((*data)->tmp);
+		ft_strclr((*data)->tmp);
+	}
+	ft_strdel(&buffer);
+	return (i);
+}
+
+/*
+** GNL
+*/
+
+int					get_next_line(const int fd, char **line)
+{
+	int				i;
+	static t_list	*list = NULL;
+	t_stock			*data;
+
+	i = 0;
+	if (!(data = ft_struct(fd, &list)))
+		return (-1);
+	if (fd < 0 || BUFF_SIZE <= 0 || !line)
+		return (-1);
+	if ((ft_check(line, &data)))
+	{
 		return (1);
 	}
-	return (0);
-}
-
-int					get_next_line(int const fd, char **line)
-{
-	static t_list	*list = NULL;
-	t_tools			*tools;
-	int				ret;
-
-	ret = 0;
-	if (fd < 0 || !line || BUFF_SIZE <= 0)
-		return (-1);
-	if (!(tools = ft_distrib_fd(fd, &list)))
-		return (-1);
-	if ((ret = ft_check_stock(&tools, &*line)))
-		return (ret);
-	ret = ft_reader(&tools, &*line);
-	return (ret);
+	i = ft_read(&data, line, i);
+	return (i);
 }
