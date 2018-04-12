@@ -109,4 +109,5 @@ t_image			*init_struct_img(t_wparam *wparam, int width, int height);
 int				my_mouse_func(int mousecode, int x, int y, t_wparam *param);
 int				aug_z(t_wparam *wparam, int ret);
 int				min_z(t_wparam *wparam, int ret);
+void			freetabint(int **tab, int x);
 #endif

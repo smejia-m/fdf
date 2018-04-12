@@ -47,7 +47,12 @@ int				my_key_func(int keycode, t_wparam *wparam)
 	if (keycode == 12 && wparam->image->wtile > 0)
 		ret = less_zoom(wparam, ret);
 	if (keycode == 53)
+	{
+		free(wparam->params);//
+		free(wparam);//
 		exit(0);
+	}
+		
 	if (keycode == 3)
 		ret = aug_z(wparam, ret);
 	if (keycode == 5)
@@ -83,10 +88,14 @@ void			my_pixel_put(t_image *image, int x, int y, t_pixel pixel)
 
 int				ft_draw_img(t_wparam *wparam, t_param *params, t_image *image)
 {
+	ft_putstr("ft_draw_img 1\n");//
 	ft_axex(params, image);
+	ft_putstr("ft_draw_img 2\n");//
 	ft_axey(params, image);
+	ft_putstr("ft_draw_img 3\n");//
 	mlx_put_image_to_window(wparam->mlx,
 		wparam->win, image->img, 0, 0);
+		ft_putstr("ft_draw_img 4\n");//
 	return (0);
 }
 
@@ -100,6 +109,7 @@ int				ft_prin_struct(t_param *params, char *win_name)
 	t_image		*image;
 	int			ret;
 
+ft_putstr("ft_print_struct 1\n");//
 	ret = 0;
 	if (!(wparam = (t_wparam *)malloc(sizeof(t_wparam))))
 		return (-1);
@@ -111,13 +121,19 @@ int				ft_prin_struct(t_param *params, char *win_name)
 	wparam->win_width, wparam->win_height, win_name);
 	wparam->image = NULL;
 	wparam->params = params;
+	ft_putstr("ft_print_struct 2\n");//
 	if (!(image = init_struct_img(wparam, 1600, 1200)))
 		return (-1);
+	ft_putstr("ft_print_struct 3\n");//
 	ret = ft_draw_img(wparam, params, image);
 	wparam->image = image;
+	ft_putstr("ft_print_struct 4\n");//
 	mlx_key_hook(wparam->win, my_key_func, (t_param *)wparam);
 	mlx_hook(wparam->win, 17, (1L << 17), close_cross, 0);
 	mlx_mouse_hook(wparam->win, my_mouse_func, (t_param *)wparam);
+	ft_putstr("ft_print_struct 5\n");//
 	mlx_loop(wparam->mlx);
+	ft_putstr("ft_print_struct 6\n");//
+	ft_putstr("i was here");//
 	return (ret);
 }

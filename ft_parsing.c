@@ -45,12 +45,20 @@ static int	ft_checknum(char *line)
 
 static int	ft_checkline(t_parse *params)
 {
+	ft_putstr("c'est fait :");
+			ft_putnbr(params->tmp_len);
+			ft_putchar('\n');
 	if (params->tmp_len != 0)
 	{
 		if (params->tmp_len != params->len)
 		{
 			ft_putstr("wrong number of lines");
 			return (-1);
+		}
+		else if (params->tmp_len <= 1)
+		{
+			ft_putstr("wrong format map");
+			return(-1);
 		}
 		else
 			return (0);

@@ -25,10 +25,13 @@ void	ft_axex(t_param *params, t_image *image)
 
 	x = 0;
 	y = 0;
+	ft_putstr("ft_axex 1\n");//
 	while (y < params->height)
 	{
+		ft_putstr("ft_axex 2\n");//
 		while (x < params->width - 1)
 		{
+			ft_putstr("ft_axex 3\n");//
 			if ((params->tab[y][x] != 0) || (params->tab[y][x + 1] != 0))
 				trace_dxz(x, y, params->tab, image);
 			else

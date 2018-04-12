@@ -13,65 +13,6 @@
 #include "fdf.h"
 
 /*
-** fonction qui transforme une liste en tableau des ints
-*/
-
-static int		**convlistab(t_list *list, int size_x, int size_y)
-{
-	int			**tab;
-	t_point		*point;
-	t_point		inc;
-
-	if (!(tab = (int **)malloc(sizeof(int*) * size_y)))
-		return (NULL);
-	inc.x = 0;
-	inc.y = 0;
-	if (!(tab[inc.y] = (int *)malloc(sizeof(int) * size_x)))
-		return (NULL);
-	while (inc.y < size_y)
-	{
-		if (!(tab[inc.y] = (int *)malloc(sizeof(int) * size_x)))
-			return (NULL);
-		while (inc.x < size_x)
-		{
-			point = list->content;
-			tab[inc.y][inc.x] = point->z;
-			++inc.x;
-			list = list->next;
-		}
-		inc.x = 0;
-		inc.y++;
-	}
-	
-	return (tab);
-}
-
-/*
-**fonction qui place les coordonnes de chaque point dans une struct t_point
-*/
-
-static t_list	*ft_toplace(t_parse *param, t_list *lst)
-{
-	t_point		*points;
-	t_list		*new_lst;
-
-	param->index_x = 0;
-	if (!(points = (t_point *)malloc(sizeof(t_point))))
-		return (NULL);
-	new_lst = NULL;
-	while (param->tab[param->index_x])
-	{
-		points->z = ft_atoi(param->tab[param->index_x]);
-		points->x = param->index_x;
-		points->y = param->index_y;
-		param->index_x++;
-		new_lst = ft_lstnew(points, sizeof(t_point));
-		ft_lstadd(&lst, new_lst);
-	}
-	return (lst);
-}
-
-/*
 **fonction qui mesure la longuer du tableau de chaine de caracteres
 */
 
@@ -93,15 +34,39 @@ static	int		count(char const *s, char c)
 }
 
 /*
-** fonction test delone
+**fonction qui place les coordonnes de chaque point dans un tableaux de ints
 */
 
-static	void	lstdelone_test(void *d, size_t n) 
+static int **ft_placer(t_parse *param, int **tab_int, char *line, int lin)
 {
-	free(d);
-	(void)n;
-}
+	int index;
+	int len;
 
+	index = 0;
+	len = count(line, ' ');
+	ft_putchar('E');//
+	if (tab_int == NULL)
+	{
+		if (!(tab_int = (int **)malloc(sizeof(int*) * len)))
+			return (NULL); 
+	}
+	ft_putchar('f');//
+	if (!(tab_int[lin] = (int *)malloc(sizeof(int) * len)))
+			return (NULL);
+
+	ft_putchar('g');//
+	while (param->tab[index])
+	{
+		tab_int[lin][index] = ft_atoi(param->tab[index]);
+		free(param->tab[index]);//
+		index++;
+			ft_putchar('h');//
+	}
+	free(param->tab);//
+		ft_putchar('I');//
+	ft_putchar('\n');
+return(tab_int);
+}
 
 /*
 ** fonction qui lit la map separe les lignes et les mets dans une structure
@@ -109,11 +74,12 @@ static	void	lstdelone_test(void *d, size_t n)
 
 t_param			*ft_reader(int fd, char *line)
 {
-	t_list		*lst;
+	int 		** tab_int;
 	t_parse		*parametres;
 	t_param		*ret;
 
-	lst = NULL;
+	tab_int = NULL;
+	ft_putstr("ft_reader 1\n");
 	if (!(ret = (t_param*)malloc(sizeof(t_param))))
 		return (NULL);
 	parametres = ft_parse_ini();
@@ -124,22 +90,25 @@ t_param			*ft_reader(int fd, char *line)
 			ft_strdel(&line);
 			return (NULL);
 		}
-		parametres->tab = ft_strsplit(line, ' ');
-		parametres->tmp_len = parametres->len;
+		parametres->tab = ft_strsplit(line, ' ');	
 		parametres->len = count(line, ' ');
-		lst = ft_toplace(parametres, lst);
+		parametres->tmp_len = parametres->len;
+		ft_putchar('D');//
+		tab_int = ft_placer(parametres, tab_int, line, parametres->index_y);
+		ft_putchar('L');//
 		parametres->index_y++;
+		ft_strdel(&line);
 	}
+	ft_putstr("ft_reader 2\n");
 	if (ft_parsing(line, parametres) == -1)
 	{
 		ft_strdel(&line);
 		return (NULL);
 	}
-	ft_lstrev(&lst);
+	ret->tab = tab_int;
 	ret->height = parametres->index_y;
-	ret->width = parametres->index_x;
-	ret->tab = convlistab(lst, parametres->index_x, parametres->index_y);
-	ft_lstdel(&lst, lstdelone_test);
-	ft_strdel(&line);
+	ret->width = parametres->len;
+	free(parametres);// test 0 leaks
+	ft_putstr("ft_reader 3\n");
 	return (ret);
 }

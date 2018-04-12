@@ -23,19 +23,23 @@ int			main(int ac, char **av)
 	int		fd;
 	int		ret;
 	char	*line;
-	t_param	*parametres;
-
+	t_param	*parametres_global;
+	
 	ret = 0;
 	line = NULL;
-	parametres = NULL;
+	parametres_global = NULL;
 	if (ac == 2)
 	{
 		fd = open(av[1], O_RDONLY);
-		parametres = ft_reader(fd, line);
-		if (parametres == NULL)
+		parametres_global = ft_reader(fd, line);
+		ft_putstr("main 1\n");
+		if (parametres_global == NULL)
+		{	
+			ft_putstr("error\n");
 			return (-1);
-		ret = ft_prin_struct(parametres, av[1]);
-	//free(parametres);//	
+		}
+		ft_putstr("main 2\n");
+		ret = ft_prin_struct(parametres_global, av[1]);
 	}
 	else
 		ret = tma_error();
